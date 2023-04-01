@@ -18,16 +18,23 @@ namespace Aliot.FileSystemWatcher
 
         #region Fields
         private readonly System.IO.FileSystemWatcher _watcher;
+        private bool _disposed;
         #endregion
 
         #region Implementation of IDisposable
-        public void Dispose() => _watcher.Dispose();
+        public void Dispose()
+        {
+            CheckIfDisposed();
+            _watcher.Dispose();
+            _disposed = true;
+        } 
         #endregion
 
         #region Implementation of IFileSystemWatcher
         public event EventHandler<NewFileAppearedEventArgs> NewFileAppeared;
         public Task StartWatchAsync(string path, CancellationToken cancellationToken)
         {
+            CheckIfDisposed();
             if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
                 throw new ArgumentException("Specified argument does not represent correct directory path.", nameof(path));
             if (_watcher.EnableRaisingEvents)
@@ -44,6 +51,11 @@ namespace Aliot.FileSystemWatcher
         #endregion
 
         #region Methods
+        private void CheckIfDisposed()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(NativeFileSystemWatcher));
+        }
         private void OnCreated(object sender, FileSystemEventArgs ea) =>
             NewFileAppeared?.Invoke(this, new NewFileAppearedEventArgs(ea.FullPath));
         #endregion

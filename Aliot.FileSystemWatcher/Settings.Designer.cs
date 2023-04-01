@@ -25,7 +25,7 @@ namespace Aliot.FileSystemWatcher {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Matyu\\OneDrive\\Desktop\\qwe")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".")]
         public string Directory {
             get {
                 return ((string)(this["Directory"]));
